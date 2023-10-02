@@ -2,6 +2,7 @@ package ru.netology.hibernate.repository;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.netology.hibernate.entities.Person;
@@ -15,10 +16,10 @@ public class DbRepository {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public List<?> getPersonsByCity(String city) {
-        return entityManager.createQuery("SELECT person, phoneNumber from Persons where cityOfLiving = ?1")
-                .setParameter(1, city)
-                .getResultList();
+    public List<Person> getPersonsByCity(String city) {
+        TypedQuery<Person> query = entityManager.createQuery("SELECT person from Persons where cityOfLiving = ?1",  Person.class)
+                .setParameter(1, city);
+        return query.getResultList();
     }
 
     @Transactional
